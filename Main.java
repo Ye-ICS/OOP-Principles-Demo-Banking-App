@@ -19,7 +19,7 @@ class Main {
             int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
-                case 1 -> currentAccountIndex = createAccount(scanner, accountNumbers, names, balances, accountCount);
+                case 1 -> accountCount = createAccount(scanner, accountNumbers, names, balances, accountCount);
                 case 2 -> searchAccount(scanner, accountNumbers, names, balances, accountCount);
                 case 3 -> accessAccount(scanner, accountNumbers, names, balances, accountCount);
                 case 4 -> {
