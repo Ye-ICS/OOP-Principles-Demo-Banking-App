@@ -2,9 +2,9 @@
  * Class to represent a basic bank account
  */
 class Account {
-    long number;
-    double balance;
-    String name;
+    private long number;
+    private double balance;
+    private String name;
 
 
     /**
@@ -16,6 +16,20 @@ class Account {
         this.name = name;
     }
 
+
+    // Getter methods:
+    long getNumber() {
+        return this.number;
+    }
+
+    String getName() {
+        return this.name;
+    }
+    
+    double getBalance() {
+        return this.balance;
+    }
+    
     boolean deposit(double amount) {
         if (amount > 0) {
             this.balance += amount;

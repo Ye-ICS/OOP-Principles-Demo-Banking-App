@@ -2,9 +2,9 @@ import java.io.*;
 import java.util.Scanner;
 
 class Main {
-    static final String ACCOUNTS_FILE = "accounts.txt";
-    static final int MAX_ACCOUNTS = 100;
-    static Account currentAccount = null;
+    private static final String ACCOUNTS_FILE = "accounts.txt";
+    private static final int MAX_ACCOUNTS = 100;
+    private static Account currentAccount = null;
 
     public static void main(String[] args) {
         Account[] accounts = new Account[MAX_ACCOUNTS];
@@ -57,7 +57,7 @@ class Main {
                 System.out.println("Enter name:");
                 String name = scanner.nextLine();
                 for (int i = 0; i < accountCount; i++) {
-                    if (accounts[i].name.equalsIgnoreCase(name)) {
+                    if (accounts[i].getName().equalsIgnoreCase(name)) {
                         accounts[i].prettyPrint();
                     }
                 }
@@ -66,7 +66,7 @@ class Main {
                 System.out.println("Enter account number:");
                 int accountNumber = Integer.parseInt(scanner.nextLine());
                 for (int i = 0; i < accountCount; i++) {
-                    if (accounts[i].number == accountNumber) {
+                    if (accounts[i].getNumber() == accountNumber) {
                         accounts[i].prettyPrint();
                     }
                 }
@@ -80,7 +80,7 @@ class Main {
         int accountNumber = Integer.parseInt(scanner.nextLine());
 
         for (int i = 0; i < accountCount; i++) {
-            if (accounts[i].number == accountNumber) {
+            if (accounts[i].getNumber() == accountNumber) {
                 while (true) {
                     System.out.println("\n1. Deposit\n2. Withdraw\n3. Check Balance\n4. Exit");
                     int choice = Integer.parseInt(scanner.nextLine());
@@ -90,7 +90,7 @@ class Main {
                             System.out.println("Enter amount to deposit:");
                             double depositAmount = Double.parseDouble(scanner.nextLine());
                             if (accounts[i].deposit(depositAmount))
-                                System.out.println("Deposit successful. New balance: " + accounts[i].balance);
+                                System.out.println("Deposit successful. New balance: " + accounts[i].getBalance());
                             else
                                 System.out.println("Deposit failed");
                         }
@@ -98,12 +98,12 @@ class Main {
                             System.out.println("Enter amount to withdraw:");
                             double withdrawAmount = Double.parseDouble(scanner.nextLine());
                             if (accounts[i].withdraw(withdrawAmount)) {
-                                System.out.println("Withdrawal successful. New balance: " + accounts[i].balance);
+                                System.out.println("Withdrawal successful. New balance: " + accounts[i].getBalance());
                             } else {
                                 System.out.println("Insufficient balance.");
                             }
                         }
-                        case 3 -> System.out.println("Current balance: " + accounts[i].balance);
+                        case 3 -> System.out.println("Current balance: " + accounts[i].getBalance());
                         case 4 -> {return;}
                         default -> System.out.println("Invalid choice. Try again.");
                     }
@@ -135,7 +135,7 @@ class Main {
             PrintWriter writer = new PrintWriter(new FileWriter(ACCOUNTS_FILE));
             for (int i = 0; i < accountCount; i++) {
                 Account account = accounts[i];
-                writer.println(account.number + "," + account.name + "," + account.balance);
+                writer.println(account.getNumber() + "," + account.getName() + "," + account.getBalance());
             }
             writer.close();
         } catch (IOException e) {
