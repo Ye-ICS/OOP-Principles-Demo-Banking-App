@@ -4,7 +4,7 @@ import java.util.Scanner;
 class Main {
     static final String ACCOUNTS_FILE = "accounts.txt";
     static final int MAX_ACCOUNTS = 100;
-    static int currentAccountIndex = -1;
+    static Account currentAccount = null;
 
     public static void main(String[] args) {
         Account[] accounts = new Account[MAX_ACCOUNTS];
@@ -61,7 +61,7 @@ class Main {
                 String name = scanner.nextLine();
                 for (int i = 0; i < accountCount; i++) {
                     if (accounts[i].name.equalsIgnoreCase(name)) {
-                        printAccount(i, accounts);
+                        printAccount(accounts[i]);
                     }
                 }
             }
@@ -70,7 +70,7 @@ class Main {
                 int accountNumber = Integer.parseInt(scanner.nextLine());
                 for (int i = 0; i < accountCount; i++) {
                     if (accounts[i].number == accountNumber) {
-                        printAccount(i, accounts);
+                        printAccount(accounts[i]);
                     }
                 }
             }
@@ -92,7 +92,7 @@ class Main {
                         case 1 -> {
                             System.out.println("Enter amount to deposit:");
                             double depositAmount = Double.parseDouble(scanner.nextLine());
-                            if (deposit(i, accounts, depositAmount))
+                            if (deposit(accounts[i], depositAmount))
                                 System.out.println("Deposit successful. New balance: " + accounts[i].balance);
                             else
                                 System.out.println("Deposit failed");
@@ -100,7 +100,7 @@ class Main {
                         case 2 -> {
                             System.out.println("Enter amount to withdraw:");
                             double withdrawAmount = Double.parseDouble(scanner.nextLine());
-                            if (withdraw(i, accounts, withdrawAmount)) {
+                            if (withdraw(accounts[i], withdrawAmount)) {
                                 System.out.println("Withdrawal successful. New balance: " + accounts[i].balance);
                             } else {
                                 System.out.println("Insufficient balance.");
@@ -116,9 +116,9 @@ class Main {
         System.out.println("Account not found.");
     }
 
-    static boolean deposit(int index, Account[] accounts, double amount) {
+    static boolean deposit(Account account, double amount) {
         if (amount > 0) {
-            accounts[index].balance += amount;
+            account.balance += amount;
             return true;
         } else {
             System.out.println("Deposit amount must be positive.");
@@ -127,9 +127,9 @@ class Main {
     }
     
 
-    static boolean withdraw(int index, Account[] accounts, double amount) {
-        if (amount <= accounts[index].balance) {
-            accounts[index].balance -= amount;
+    static boolean withdraw(Account account, double amount) {
+        if (amount <= account.balance) {
+            account.balance -= amount;
             return true;
         } else {
             return false;
@@ -169,9 +169,9 @@ class Main {
         }
     }
 
-    static void printAccount(int index, Account[] accounts) {
-        System.out.println("Account Number: " + accounts[index].number);
-        System.out.println("Name: " + accounts[index].name);
-        System.out.println("Balance: " + accounts[index].balance);
+    static void printAccount(Account account) {
+        System.out.println("Account Number: " + account.number);
+        System.out.println("Name: " + account.name);
+        System.out.println("Balance: " + account.balance);
     }
 }
