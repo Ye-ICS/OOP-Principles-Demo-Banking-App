@@ -30,7 +30,7 @@ class Main {
         }
     }
 
-    static int createAccount(Scanner scanner, Account[] accounts, int accountCount) {
+    private static int createAccount(Scanner scanner, Account[] accounts, int accountCount) {
         if (accountCount >= MAX_ACCOUNTS) {
             System.out.println("Maximum number of accounts reached.");
             return accountCount;
@@ -48,7 +48,7 @@ class Main {
         return accountCount;
     }
 
-    static void searchAccount(Scanner scanner, Account[] accounts, int accountCount) {
+    private static void searchAccount(Scanner scanner, Account[] accounts, int accountCount) {
         System.out.println("Search by:\n1. Name\n2. Account Number");
         int choice = Integer.parseInt(scanner.nextLine());
 
@@ -75,7 +75,7 @@ class Main {
         }
     }
 
-    static void accessAccount(Scanner scanner, Account[] accounts, int accountCount) {
+    private static void accessAccount(Scanner scanner, Account[] accounts, int accountCount) {
         System.out.println("Enter account number:");
         int accountNumber = Integer.parseInt(scanner.nextLine());
 
@@ -113,7 +113,7 @@ class Main {
         System.out.println("Account not found.");
     }
 
-    static int loadAccounts(Account[] accounts) {
+    private static int loadAccounts(Account[] accounts) {
         int count = 0;
         try {
             Scanner scanner = new Scanner(new File(ACCOUNTS_FILE));
@@ -130,7 +130,7 @@ class Main {
         return count;
     }
 
-    static void saveAccounts(Account[] accounts, int accountCount) {
+    private static void saveAccounts(Account[] accounts, int accountCount) {
         try {
             PrintWriter writer = new PrintWriter(new FileWriter(ACCOUNTS_FILE));
             for (int i = 0; i < accountCount; i++) {
