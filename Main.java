@@ -61,7 +61,7 @@ class Main {
                 String name = scanner.nextLine();
                 for (int i = 0; i < accountCount; i++) {
                     if (accounts[i].name.equalsIgnoreCase(name)) {
-                        printAccount(accounts[i]);
+                        accounts[i].prettyPrint();
                     }
                 }
             }
@@ -70,7 +70,7 @@ class Main {
                 int accountNumber = Integer.parseInt(scanner.nextLine());
                 for (int i = 0; i < accountCount; i++) {
                     if (accounts[i].number == accountNumber) {
-                        printAccount(accounts[i]);
+                        accounts[i].prettyPrint();
                     }
                 }
             }
@@ -92,7 +92,7 @@ class Main {
                         case 1 -> {
                             System.out.println("Enter amount to deposit:");
                             double depositAmount = Double.parseDouble(scanner.nextLine());
-                            if (deposit(accounts[i], depositAmount))
+                            if (accounts[i].deposit(depositAmount))
                                 System.out.println("Deposit successful. New balance: " + accounts[i].balance);
                             else
                                 System.out.println("Deposit failed");
@@ -100,7 +100,7 @@ class Main {
                         case 2 -> {
                             System.out.println("Enter amount to withdraw:");
                             double withdrawAmount = Double.parseDouble(scanner.nextLine());
-                            if (withdraw(accounts[i], withdrawAmount)) {
+                            if (accounts[i].withdraw(withdrawAmount)) {
                                 System.out.println("Withdrawal successful. New balance: " + accounts[i].balance);
                             } else {
                                 System.out.println("Insufficient balance.");
@@ -114,26 +114,6 @@ class Main {
             }
         }
         System.out.println("Account not found.");
-    }
-
-    static boolean deposit(Account account, double amount) {
-        if (amount > 0) {
-            account.balance += amount;
-            return true;
-        } else {
-            System.out.println("Deposit amount must be positive.");
-            return false;
-        }
-    }
-    
-
-    static boolean withdraw(Account account, double amount) {
-        if (amount <= account.balance) {
-            account.balance -= amount;
-            return true;
-        } else {
-            return false;
-        }
     }
 
     static int loadAccounts(Account[] accounts) {
@@ -167,11 +147,5 @@ class Main {
         } catch (IOException e) {
             System.out.println("Error saving accounts: " + e.getMessage());
         }
-    }
-
-    static void printAccount(Account account) {
-        System.out.println("Account Number: " + account.number);
-        System.out.println("Name: " + account.name);
-        System.out.println("Balance: " + account.balance);
     }
 }
