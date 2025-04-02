@@ -6,7 +6,15 @@ class Account {
     double balance;
     String name;
 
-    
+
+    /**
+     * Basic constructor, initializes using given values
+     */
+    Account(long number, String name, double balance) {
+        this.number = number;
+        this.balance = balance;
+        this.name = name;
+    }
 
     boolean deposit(double amount) {
         if (amount > 0) {

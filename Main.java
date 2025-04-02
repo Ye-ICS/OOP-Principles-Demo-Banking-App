@@ -42,10 +42,7 @@ class Main {
         double balance = Double.parseDouble(scanner.nextLine());
 
         int accountNumber = accountCount + 1;
-        accounts[accountCount] = new Account();
-        accounts[accountCount].number = accountNumber;
-        accounts[accountCount].name = name;
-        accounts[accountCount].balance = balance;
+        accounts[accountCount] = new Account(accountNumber, name, balance);
         accountCount++;
         System.out.println("Account created successfully. Account Number: " + accountNumber);
         return accountCount;
@@ -123,10 +120,7 @@ class Main {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split(",");
-                accounts[count] = new Account();
-                accounts[count].number = Integer.parseInt(parts[0]);
-                accounts[count].name = parts[1];
-                accounts[count].balance = Double.parseDouble(parts[2]);
+                accounts[count] = new Account(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]));
                 count++;
             }
             scanner.close();
