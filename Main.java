@@ -12,14 +12,16 @@ class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\n1. Create Account\n2. Search Account\n3. Access Account\n4. Exit");
+            System.out.println("\n1. Create Account\n2. Search Account\n3. Select Account\n4. Deposit\n5. Withdraw\n6. Exit");
             int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
                 case 1 -> currentAccount = createAccount(scanner, accounts);
                 case 2 -> searchAccount(scanner, accounts);
                 case 3 -> accessAccount(scanner, accounts);
-                case 4 -> {
+                case 4 -> promptDeposit(scanner);
+                case 5 -> promptWithdraw(scanner);
+                case 6 -> {
                     saveAccounts(accounts);
                     System.out.println("Goodbye!");
                     return;
@@ -75,36 +77,40 @@ class Main {
 
         for (int i = 0; i < accounts.size(); i++) {
             if (accounts.get(i).getNumber() == accountNumber) {
-                while (true) {
-                    System.out.println("\n1. Deposit\n2. Withdraw\n3. Check Balance\n4. Exit");
-                    int choice = Integer.parseInt(scanner.nextLine());
-
-                    switch (choice) {
-                        case 1 -> {
-                            System.out.println("Enter amount to deposit:");
-                            double depositAmount = Double.parseDouble(scanner.nextLine());
-                            if (accounts.get(i).deposit(depositAmount))
-                                System.out.println("Deposit successful. New balance: " + accounts.get(i).getBalance());
-                            else
-                                System.out.println("Deposit failed");
-                        }
-                        case 2 -> {
-                            System.out.println("Enter amount to withdraw:");
-                            double withdrawAmount = Double.parseDouble(scanner.nextLine());
-                            if (accounts.get(i).withdraw(withdrawAmount)) {
-                                System.out.println("Withdrawal successful. New balance: " + accounts.get(i).getBalance());
-                            } else {
-                                System.out.println("Insufficient balance.");
-                            }
-                        }
-                        case 3 -> System.out.println("Current balance: " + accounts.get(i).getBalance());
-                        case 4 -> {return;}
-                        default -> System.out.println("Invalid choice. Try again.");
-                    }
-                }
+                currentAccount = accounts.get(i);
+                return;
             }
         }
         System.out.println("Account not found.");
+    }
+
+    private static void promptDeposit(Scanner scanner) {
+        if (currentAccount == null) {
+            System.out.println("Can't. No account selected.");
+            return;
+        }
+
+        System.out.println("Enter amount to deposit:");
+        double depositAmount = Double.parseDouble(scanner.nextLine());
+        if (currentAccount.deposit(depositAmount))
+            System.out.println("Deposit successful. New balance: " + currentAccount.getBalance());
+        else
+            System.out.println("Deposit failed");
+    }
+
+    private static void promptWithdraw(Scanner scanner) {
+        if (currentAccount == null) {
+            System.out.println("Can't. No account selected.");
+            return;
+        }
+        
+        System.out.println("Enter amount to withdraw:");
+        double withdrawAmount = Double.parseDouble(scanner.nextLine());
+        if (currentAccount.withdraw(withdrawAmount)) {
+            System.out.println("Withdrawal successful. New balance: " + currentAccount.getBalance());
+        } else {
+            System.out.println("Insufficient balance.");
+        }
     }
 
     private static ArrayList<Account> loadAccounts() {
