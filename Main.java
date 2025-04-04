@@ -12,13 +12,19 @@ class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\n1. Create Account\n2. Search Account\n3. Select Account\n4. Deposit\n5. Withdraw\n6. Exit");
+            if (currentAccount != null) {
+                System.out.println("Selected account: ");
+                currentAccount.prettyPrint();
+                System.out.println("-".repeat(20));
+            }
+
+            System.out.println("1. Create Account\n2. Search Account\n3. Select Account\n4. Deposit\n5. Withdraw\n6. Exit");
             int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
                 case 1 -> currentAccount = createAccount(scanner, accounts);
                 case 2 -> searchAccount(scanner, accounts);
-                case 3 -> accessAccount(scanner, accounts);
+                case 3 -> selectAccount(scanner, accounts);
                 case 4 -> promptDeposit(scanner);
                 case 5 -> promptWithdraw(scanner);
                 case 6 -> {
@@ -71,7 +77,7 @@ class Main {
         }
     }
 
-    private static void accessAccount(Scanner scanner, ArrayList<Account> accounts) {
+    private static void selectAccount(Scanner scanner, ArrayList<Account> accounts) {
         System.out.println("Enter account number:");
         int accountNumber = Integer.parseInt(scanner.nextLine());
 
