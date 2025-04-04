@@ -31,22 +31,23 @@ class Account {
     }
     
     boolean deposit(double amount) {
-        if (amount > 0) {
-            this.balance += amount;
-            return true;
-        } else {
+        if (amount <= 0) {
             System.out.println("Deposit amount must be positive.");
             return false;
         }
+
+        this.balance += amount;
+        return true;
     }
 
     boolean withdraw(double amount) {
-        if (amount <= this.balance) {
-            this.balance -= amount;
-            return true;
-        } else {
+        if (amount > this.balance) {
+            System.out.println("Insufficient funds.");
             return false;
         }
+        
+        this.balance -= amount;
+        return true;
     }
 
     void prettyPrint() {
