@@ -6,6 +6,7 @@ class Account {
     private static double depositAlertAmount = 10_000;
 
     private long number;
+    private long userId;
     private double balance;
     private String name;
 
@@ -23,6 +24,10 @@ class Account {
     // Getter methods:
     long getNumber() {
         return this.number;
+    }
+
+    long getUserId() {
+        return this.userId;
     }
 
     String getName() {
