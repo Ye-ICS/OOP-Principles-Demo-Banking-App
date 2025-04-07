@@ -8,30 +8,38 @@ import java.util.List;
 import java.util.Scanner;
 
 class AccountManager {
+    private UserManager userMan;
     private String accountsFile;
     private ArrayList<Account> accounts;
 
 
     /**
-     * Constructs AccountManager, loads accounts from specified file
-     * @param filename
+     * Constructs AccountManager, loads accounts and users from specified files
+     * @param accountsFile
+     * @param usersFile
      */
-    AccountManager(String filename) {
-        accountsFile = filename;
+    AccountManager(String accountsFile, String usersFile) {
+        this.accountsFile = accountsFile;
+        userMan = new UserManager(usersFile);   // Load users first so accounts can be linked to users
         loadAccounts();
+    }
+
+    UserManager getUserManager() {
+        return userMan;
     }
 
 
     /**
      * Creates and returns new account with given data
-     * @param name Name of account holder
+     * @param user User who owns the account
      * @param initialBalance Initial balance
      * @return New instance of Account
      */
-    Account createAccount(String name, double initialBalance) {
+    Account createAccount(User user, double initialBalance) {
         long newAccountNumber = generateAccountNumber();
-        Account newAccount = new Account(newAccountNumber, name, initialBalance);
+        Account newAccount = new Account(newAccountNumber, user.getId(), initialBalance);
         accounts.add(newAccount);
+        user.addAccount(newAccount);
         return newAccount;
     }
 
@@ -67,23 +75,6 @@ class AccountManager {
     }
 
     /**
-     * Searches and returns accounts with matching name
-     * @param name Name to match
-     * @return Accounts that match name
-     */
-    List<Account> searchAccountsByName(String name) {
-        ArrayList<Account> matchingAccounts = new ArrayList<>();
-
-        for (int i = 0; i < accounts.size(); i++) {
-            if (accounts.get(i).getName().equalsIgnoreCase(name)) {
-                matchingAccounts.add(accounts.get(i));
-            }
-        }
-
-        return matchingAccounts;
-    } 
-
-    /**
      * Loads accounts from storage
      */
     private void loadAccounts() {
@@ -94,7 +85,16 @@ class AccountManager {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split(",");
-                Account account = new Account(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]));
+                Account account = new Account(Long.parseLong(parts[0]), Long.parseLong(parts[1]), Double.parseDouble(parts[2]));
+                
+                // Check if linked user exists
+                User user = userMan.getUserById(account.getUserId());
+                if (user == null) {
+                    System.err.println("User with ID " + account.getUserId() + " not found for account " + account.getNumber());
+                    continue; // Skip this account
+                }
+
+                user.addAccount(account);
                 accounts.add(account);
             }
             scanner.close();
@@ -111,7 +111,7 @@ class AccountManager {
             PrintWriter writer = new PrintWriter(new FileWriter(accountsFile));
             for (int i = 0; i < accounts.size(); i++) {
                 Account account = accounts.get(i);
-                writer.println(account.getNumber() + "," + account.getName() + "," + account.getBalance());
+                writer.println(account.getNumber() + "," + account.getUserId()+ "," + account.getBalance());
             }
             writer.close();
         } catch (IOException e) {

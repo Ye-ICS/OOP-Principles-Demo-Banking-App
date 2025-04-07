@@ -3,107 +3,130 @@ import java.util.Scanner;
 
 class Main {
     private static final String ACCOUNTS_FILE = "accounts.txt";
-    private static Account currentAccount = null;
+    private static final String USERS_FILE = "users.txt";
 
     public static void main(String[] args) {
-        AccountManager accountMan = new AccountManager(ACCOUNTS_FILE);
+        AccountManager accountMan = new AccountManager(ACCOUNTS_FILE, USERS_FILE);
         Scanner scanner = new Scanner(System.in);
 
+        mainMenu(scanner, accountMan);
+        accountMan.saveAccounts();
+        accountMan.getUserManager().saveUsers();
+    }
+
+    private static void mainMenu(Scanner scanner, AccountManager accountManager) {
         while (true) {
-            if (currentAccount != null) {
-                System.out.println("Selected account: ");
-                currentAccount.prettyPrint();
-                System.out.println("-".repeat(20));
-            }
-
-            System.out.println("1. Create Account\n2. Search Account\n3. Select Account\n4. Deposit\n5. Withdraw\n6. Exit");
+            System.out.println("Welcome to the Bank Management System");
+            System.out.println("1. Find user by user ID");
+            System.out.println("2. Search users by name");
+            System.out.println("3. Exit");
             int choice = Integer.parseInt(scanner.nextLine());
-
             switch (choice) {
-                case 1 -> currentAccount = createAccount(scanner, accountMan);
-                case 2 -> searchAccount(scanner, accountMan);
-                case 3 -> selectAccount(scanner, accountMan);
-                case 4 -> promptDeposit(scanner);
-                case 5 -> promptWithdraw(scanner);
-                case 6 -> {
-                    accountMan.saveAccounts();
-                    System.out.println("Goodbye!");
-                    return;
-                }
+                case 1 -> selectUser(scanner, accountManager);
+                case 2 -> searchUsersByName(scanner, accountManager);
+                case 3 -> {return;}
                 default -> System.out.println("Invalid choice. Try again.");
             }
         }
     }
 
-    private static Account createAccount(Scanner scanner, AccountManager accountManager) {
-        System.out.println("Enter account holder's name:");
+    private static void selectUser(Scanner scanner, AccountManager accountManager) {
+        System.out.println("Enter user ID:");
+        long userId = Long.parseLong(scanner.nextLine());
+
+        User foundUser = accountManager.getUserManager().getUserById(userId);
+        if (foundUser == null) {
+            System.out.println("User not found.");
+            return;
+        }
+
+        foundUser.prettyPrint();
+        userMenu(scanner, foundUser, accountManager);
+        accountManager.saveAccounts();
+    }
+
+    private static void searchUsersByName(Scanner scanner, AccountManager accountManager) {
+        System.out.println("Enter name to search:");
         String name = scanner.nextLine();
+
+        List<User> users = accountManager.getUserManager().searchUsersByName(name);
+        for (User user : users) {
+            user.prettyPrint();
+        }
+    }
+
+    private static void userMenu(Scanner scanner, User user, AccountManager accountManager) {
+        while (true) {
+            System.out.println("1. Create Account");
+            System.out.println("2. Print Accounts");
+            System.out.println("3. Select Account");
+            System.out.println("4. Exit");
+
+            int choice = Integer.parseInt(scanner.nextLine());
+            switch (choice) {
+                case 1 -> createAccount(scanner, user, accountManager);
+                case 2 -> user.prettyPrintAccounts();
+                case 3 -> selectAccount(scanner, user);
+                case 4 -> {return;}
+                default -> System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    private static Account createAccount(Scanner scanner, User user, AccountManager accountManager) {
         System.out.println("Enter initial balance:");
         double balance = Double.parseDouble(scanner.nextLine());
 
-        Account newAccount = accountManager.createAccount(name, balance);
+        Account newAccount = accountManager.createAccount(user,  balance);
         System.out.println("Account created successfully. Account Number: " + newAccount.getNumber());
+        accountManager.saveAccounts();
         return newAccount;
     }
 
-    private static void searchAccount(Scanner scanner, AccountManager accountManager) {
-        System.out.println("Search by:\n1. Name\n2. Account Number");
-        int choice = Integer.parseInt(scanner.nextLine());
-
-        switch (choice) {
-            case 1 -> {
-                System.out.println("Enter name:");
-                String name = scanner.nextLine();
-
-                List<Account> accounts = accountManager.searchAccountsByName(name);
-                for (Account account : accounts) {
-                    account.prettyPrint();
-                }
-            }
-            case 2 -> {
-                // TODO: Redundant. Remove this option.
-            }
-            default -> System.out.println("Invalid choice. Try again.");
-        }
-    }
-
-    private static void selectAccount(Scanner scanner, AccountManager accountManager) {
+    private static void selectAccount(Scanner scanner, User user) {
         System.out.println("Enter account number:");
         int accountNumber = Integer.parseInt(scanner.nextLine());
 
-        Account foundAccount = accountManager.getAccountByNumber(accountNumber);
+        Account foundAccount = user.getAccountByNumber(accountNumber);
         if (foundAccount == null) {
-            System.out.println("Account not found.");
+            System.out.println("Account not found under user " + user.getId());
             return;
         }
 
-        currentAccount = foundAccount;  // Otherwise, set found account as currently selected
+        foundAccount.prettyPrint();
+        accountMenu(scanner, foundAccount);
     }
 
-    private static void promptDeposit(Scanner scanner) {
-        if (currentAccount == null) {
-            System.out.println("Can't. No account selected.");
-            return;
-        }
+    private static void accountMenu(Scanner scanner, Account account) {
+        while (true) {
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. Exit");
 
+            int choice = Integer.parseInt(scanner.nextLine());
+            switch (choice) {
+                case 1 -> promptDeposit(scanner, account);
+                case 2 -> promptWithdraw(scanner, account);
+                case 3 -> {return;}
+                default -> System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    private static void promptDeposit(Scanner scanner, Account account) {
         System.out.println("Enter amount to deposit:");
         double depositAmount = Double.parseDouble(scanner.nextLine());
-        if (currentAccount.deposit(depositAmount))
-            System.out.println("Deposit successful. New balance: " + currentAccount.getBalance());
+        if (account.deposit(depositAmount))
+            System.out.println("Deposit successful. New balance: " + account.getBalance());
         else
             System.out.println("Deposit failed");
     }
 
-    private static void promptWithdraw(Scanner scanner) {
-        if (currentAccount == null) {
-            System.out.println("Can't. No account selected.");
-            return;
-        }
-        
+    private static void promptWithdraw(Scanner scanner, Account account) {
         System.out.println("Enter amount to withdraw:");
         double withdrawAmount = Double.parseDouble(scanner.nextLine());
-        if (currentAccount.withdraw(withdrawAmount)) {
-            System.out.println("Withdrawal successful. New balance: " + currentAccount.getBalance());
+        if (account.withdraw(withdrawAmount)) {
+            System.out.println("Withdrawal successful. New balance: " + account.getBalance());
         } else {
             System.out.println("Insufficient balance.");
         }

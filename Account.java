@@ -8,16 +8,15 @@ class Account {
     private long number;
     private long userId;
     private double balance;
-    private String name;
 
 
     /**
      * Basic constructor, initializes using given values
      */
-    Account(long number, String name, double balance) {
+    Account(long number, long userId, double balance) {
         this.number = number;
         this.balance = balance;
-        this.name = name;
+        this.userId = userId;
     }
 
 
@@ -28,10 +27,6 @@ class Account {
 
     long getUserId() {
         return this.userId;
-    }
-
-    String getName() {
-        return this.name;
     }
     
     double getBalance() {
@@ -68,7 +63,7 @@ class Account {
 
     void prettyPrint() {
         System.out.println("Account Number: " + this.number);
-        System.out.println("Name: " + this.name);
+        System.out.println("Account holder user ID: " + this.userId);
         System.out.println("Balance: " + this.balance);
     }
 }
