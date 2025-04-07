@@ -29,10 +29,26 @@ class AccountManager {
      * @return New instance of Account
      */
     Account createAccount(String name, double initialBalance) {
-        int accountNumber = accounts.size() + 1;
-        Account newAccount = new Account(accountNumber, name, initialBalance);
+        long newAccountNumber = generateAccountNumber();
+        Account newAccount = new Account(newAccountNumber, name, initialBalance);
         accounts.add(newAccount);
         return newAccount;
+    }
+
+    /**
+     * Generate new account number
+     * @return Unique number not used by any existing account
+     */
+    private long generateAccountNumber() {
+        // TODO: Not secure. Use random in future.
+        long highestAccountNumber = 0;
+        for (Account account : accounts) {
+            if (highestAccountNumber < account.getNumber()) {
+                highestAccountNumber = account.getNumber();
+            }
+        }
+
+        return highestAccountNumber + 1;
     }
 
     /**
