@@ -85,7 +85,24 @@ class AccountManager {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split(",");
-                Account account = new Account(Long.parseLong(parts[0]), Long.parseLong(parts[1]), Double.parseDouble(parts[2]));
+                Account account;
+                long accountNumber = Long.parseLong(parts[0]);
+                long userId = Long.parseLong(parts[1]);
+                double balance = Double.parseDouble(parts[2]);
+                String accountType = parts[3];
+
+                if (accountType.equals("ch")) {
+                    account = new ChequingAccount(accountNumber, userId, balance);
+                } else if (accountType.equals("s")) {
+                    account = new SavingsAccount(accountNumber, userId, balance);
+                } else if (accountType.equals("cr")) {
+                    double creditLimit = Double.parseDouble(parts[4]);
+                    double interestRate = Double.parseDouble(parts[5]);
+                    account = new CreditAccount(accountNumber, userId, balance, creditLimit, interestRate);
+                } else {
+                    System.err.println(accountType + " is not a valid account type for account " + accountNumber);
+                    continue; // Skip invalid account type
+                }
                 
                 // Check if linked user exists
                 User user = userMan.getUserById(account.getUserId());
@@ -111,8 +128,18 @@ class AccountManager {
             PrintWriter writer = new PrintWriter(new FileWriter(accountsFile));
             for (int i = 0; i < accounts.size(); i++) {
                 Account account = accounts.get(i);
-                String accountType = "ch";  // TODO: Replace with each account's actual type
-                writer.println(account.getNumber() + "," + account.getUserId()+ "," + account.getBalance() + "," + accountType);
+                writer.print(account.getNumber() + "," + account.getUserId() + "," + account.getBalance() + ",");
+                if (account.getClass() == ChequingAccount.class) {
+                    writer.println("ch");
+                } else if (account.getClass() == SavingsAccount.class) {
+                    writer.println("s");
+                } else if (account.getClass() == CreditAccount.class) {
+                    CreditAccount creditAccount = (CreditAccount) account;
+                    writer.println("cr," + creditAccount.getLimit() + "," + creditAccount.getInterestRate());
+                } else {
+                    System.err.println("Unknown account type: " + account.getClass().getName());
+                    continue; // Skip this account
+                }
             }
             writer.close();
         } catch (IOException e) {

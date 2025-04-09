@@ -45,6 +45,16 @@ class Account {
     boolean withdraw(double amount) {balance -= amount; return true;}
 
     void prettyPrint() {
+        if (this.getClass() == ChequingAccount.class) {
+            System.out.println("-Chequing Account-");
+        } else if (this.getClass() == SavingsAccount.class) {
+            System.out.println("-Savings Account-");
+        } else if (this.getClass() == CreditAccount.class) {
+            System.out.println("-Credit Account-");
+        } else {
+            System.err.println("Error: Unknown account type: " + this.getClass() + "Accoun number: " + this.number);
+            System.out.println("-Unknown Account Type-");
+        }
         System.out.println("Account Number: " + this.number);
         System.out.println("Account holder user ID: " + this.userId);
         System.out.println("Balance: " + this.balance);
