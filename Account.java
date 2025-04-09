@@ -2,12 +2,9 @@
  * Class to represent a basic bank account
  */
 class Account {
-    private static double withdrawalAlertAmount = 1000;
-    private static double depositAlertAmount = 10_000;
-
     private long number;
     private long userId;
-    private double balance;
+    protected double balance;
 
 
     /**
@@ -32,34 +29,20 @@ class Account {
     double getBalance() {
         return this.balance;
     }
-    
-    boolean deposit(double amount) {
-        if (amount <= 0) {
-            System.out.println("Deposit amount must be positive.");
-            return false;
-        }
-        
-        if (amount >= depositAlertAmount) {
-            System.out.println("Alert: Client depositing a suspect amount. May require investigation.");
-        }
 
-        this.balance += amount;
-        return true;
-    }
+    /**
+     * Deposits money into account
+     * @param amount
+     * @return
+     */
+    boolean deposit(double amount) {balance += amount; return true;}
 
-    boolean withdraw(double amount) {
-        if (amount > this.balance) {
-            System.out.println("Insufficient funds.");
-            return false;
-        }
-
-        if (amount >= withdrawalAlertAmount) {
-            System.out.println("Alert: Client withdrawing a suspect amount. May require investigation.");
-        }
-        
-        this.balance -= amount;
-        return true;
-    }
+    /**
+     * Withdraws money from account
+     * @param amount
+     * @return
+     */
+    boolean withdraw(double amount) {balance -= amount; return true;}
 
     void prettyPrint() {
         System.out.println("Account Number: " + this.number);

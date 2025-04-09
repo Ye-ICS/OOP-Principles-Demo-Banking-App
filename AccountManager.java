@@ -111,7 +111,8 @@ class AccountManager {
             PrintWriter writer = new PrintWriter(new FileWriter(accountsFile));
             for (int i = 0; i < accounts.size(); i++) {
                 Account account = accounts.get(i);
-                writer.println(account.getNumber() + "," + account.getUserId()+ "," + account.getBalance());
+                String accountType = "ch";  // TODO: Replace with each account's actual type
+                writer.println(account.getNumber() + "," + account.getUserId()+ "," + account.getBalance() + "," + accountType);
             }
             writer.close();
         } catch (IOException e) {
