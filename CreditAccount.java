@@ -42,6 +42,11 @@ class CreditAccount extends Account {
     }
 
     @Override
+    boolean transfer(Account target, double amount) {
+        throw new UnsupportedOperationException("Transfer from credit account is not supported.");
+    }
+
+    @Override
     boolean withdraw(double amount) {
         // TODO: Apply fee for withdrawal.
         return chargeCredit(amount);
@@ -55,7 +60,7 @@ class CreditAccount extends Account {
     /**
      * Pays credit balance by specified amount
      * @param amount Amount to pay
-     * @return New balance after payment
+     * @return Whether the payment was successful
      */
     boolean payCredit(double amount) {
         if (amount <= 0) {

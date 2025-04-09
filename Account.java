@@ -44,6 +44,23 @@ class Account {
      */
     boolean withdraw(double amount) {balance -= amount; return true;}
 
+    /**
+     * Transfers money into target account
+     * @param target Account to deposit into
+     * @param amount Amount to deposit
+     * @return True if successful, false otherwise
+     */
+    boolean transfer(Account target, double amount) {
+        boolean withdrawalSuccess = withdraw(amount);
+        if (!withdrawalSuccess) {
+            System.out.println("Transfer failed: Insufficient funds.");
+            return false;
+        }
+        
+        target.deposit(amount);
+        return true;
+    }
+
     void prettyPrint() {
         if (this.getClass() == ChequingAccount.class) {
             System.out.println("-Chequing Account-");

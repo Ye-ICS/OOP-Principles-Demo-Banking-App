@@ -60,14 +60,16 @@ class Main {
             System.out.println("1. Create Account");
             System.out.println("2. Print Accounts");
             System.out.println("3. Select Account");
-            System.out.println("4. Back");
+            System.out.println("4. Transfer Money");
+            System.out.println("5. Back");
 
             int choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
                 case 1 -> createAccount(scanner, user, accountManager);
                 case 2 -> user.prettyPrintAccounts();
                 case 3 -> selectAccount(scanner, user);
-                case 4 -> {return;}
+                case 4 -> promptTransfer(scanner, user);
+                case 5 -> {return;}
                 default -> System.out.println("Invalid choice. Try again.");
             }
         }
@@ -96,6 +98,39 @@ class Main {
 
         foundAccount.prettyPrint();
         accountMenu(scanner, foundAccount);
+    }
+
+    private static void promptTransfer(Scanner scanner, User user) {
+        System.out.println("Enter source account number:");
+        long sourceAccountNumber = Long.parseLong(scanner.nextLine());
+        Account sourceAccount = user.getAccountByNumber(sourceAccountNumber);
+        if (sourceAccount == null) {
+            System.out.println("Source account not found.");
+            return;
+        }
+        
+        System.out.println("Enter target account number:");
+        long targetAccountNumber = Long.parseLong(scanner.nextLine());
+
+        if (targetAccountNumber == sourceAccountNumber) {
+            System.out.println("Cannot transfer to the same account.");
+            return;
+        }
+
+        Account targetAccount = user.getAccountByNumber(targetAccountNumber);
+        if (targetAccount == null) {
+            System.out.println("Target account not found.");
+            return;
+        }
+
+        System.out.println("Enter amount to transfer:");
+        double transferAmount = Double.parseDouble(scanner.nextLine());
+
+        if (sourceAccount.transfer(targetAccount, transferAmount)) {
+            System.out.println("Transfer successful.");
+        } else {
+            System.out.println("Transfer failed.");
+        }
     }
 
     private static void accountMenu(Scanner scanner, Account account) {
