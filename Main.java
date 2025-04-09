@@ -60,7 +60,7 @@ class Main {
             System.out.println("1. Create Account");
             System.out.println("2. Print Accounts");
             System.out.println("3. Select Account");
-            System.out.println("4. Exit");
+            System.out.println("4. Back");
 
             int choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
@@ -74,6 +74,7 @@ class Main {
     }
 
     private static Account createAccount(Scanner scanner, User user, AccountManager accountManager) {
+        // TODO: Ask for account type
         System.out.println("Enter initial balance:");
         double balance = Double.parseDouble(scanner.nextLine());
 
@@ -98,16 +99,59 @@ class Main {
     }
 
     private static void accountMenu(Scanner scanner, Account account) {
+        if (account.getClass() == ChequingAccount.class) {
+            chequingAccountMenu(scanner, (ChequingAccount) account);
+        } else if (account.getClass() == SavingsAccount.class) {
+            savingsAccountMenu(scanner, (SavingsAccount) account);
+        } else if (account.getClass() == CreditAccount.class) {
+            creditAccountMenu(scanner, (CreditAccount) account);
+        } else {
+            System.out.println("Unknown account type.");
+        }
+    }
+
+    private static void chequingAccountMenu(Scanner scanner, ChequingAccount account) {
         while (true) {
             System.out.println("1. Deposit");
             System.out.println("2. Withdraw");
-            System.out.println("3. Exit");
+            System.out.println("3. Back");
 
             int choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
                 case 1 -> promptDeposit(scanner, account);
                 case 2 -> promptWithdraw(scanner, account);
                 case 3 -> {return;}
+                default -> System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    private static void savingsAccountMenu(Scanner scanner, SavingsAccount account) {
+        while (true) {
+            System.out.println("1. Deposit");
+            System.out.println("2. Back");
+
+            int choice = Integer.parseInt(scanner.nextLine());
+            switch (choice) {
+                case 1 -> promptDeposit(scanner, account);
+                case 2 -> {return;}
+                default -> System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    private static void creditAccountMenu(Scanner scanner, CreditAccount account) {
+        while (true) {
+            System.out.println("1. Pay Credit");
+            System.out.println("2. Charge Credit");
+            System.out.println("3. Withdraw cash (fees may apply)");
+            System.out.println("4. Back");
+            int choice = Integer.parseInt(scanner.nextLine());
+            switch (choice) {
+                case 1 -> promptPayCredit(scanner, account);
+                case 2 -> promptChargeCredit(scanner, account);
+                case 3 -> promptWithdraw(scanner, account);
+                case 4 -> {return;}
                 default -> System.out.println("Invalid choice. Try again.");
             }
         }
@@ -129,6 +173,26 @@ class Main {
             System.out.println("Withdrawal successful. New balance: " + account.getBalance());
         } else {
             System.out.println("Insufficient balance.");
+        }
+    }
+
+    private static void promptPayCredit(Scanner scanner, CreditAccount account) {
+        System.out.println("Enter amount to pay:");
+        double payAmount = Double.parseDouble(scanner.nextLine());
+        if (account.payCredit(payAmount)) {
+            System.out.println("Payment successful. New balance: " + account.getBalance());
+        } else {
+            System.out.println("Payment failed.");
+        }
+    }
+
+    private static void promptChargeCredit(Scanner scanner, CreditAccount account) {
+        System.out.println("Enter amount to charge:");
+        double chargeAmount = Double.parseDouble(scanner.nextLine());
+        if (account.chargeCredit(chargeAmount)) {
+            System.out.println("Charge successful. New balance: " + account.getBalance());
+        } else {
+            System.out.println("Charge failed.");
         }
     }
 }
