@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="rootContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainMenuController">
    <center>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -19,17 +18,17 @@
                         <Font size="28.0" />
                      </font>
                   </Label>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Select User By ID">
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openUserMenu" text="Select User By ID">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Search Users By Name">
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openUserNameSearch" text="Search Users By Name">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Exit">
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#exit" text="Exit">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </VBox.margin>
